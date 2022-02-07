@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 
-    <h1>FInch Details</h1>
+    <h1>Finch Details</h1>
 
     <div class="card">
         <div class="card-content">
@@ -9,6 +9,10 @@
             <p>Breed: {{ finch.type }}</p>
             <p>Description: {{ finch.description }}</p>
             <p>Age: {{ finch.age }}</p>
+            <div class="card-action">
+                <a href="{% url 'finches_update' finch.id %}">Edit</a>
+                <a href="{% url 'finches_delete' finch.id %}">Delete</a>
+            </div>
         </div>
     </div>
 
