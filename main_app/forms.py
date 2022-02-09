@@ -4,6 +4,6 @@ from .models import Watching
 class WatchingForm(ModelForm):
   class Meta:
     model = Watching
-    fields = ['date', 'Viewing']
+    fields = ['date', 'view']
 
     

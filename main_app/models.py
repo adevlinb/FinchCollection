@@ -40,6 +40,9 @@ class Watching(models.Model):
     def __str__(self):
         return f"{self.get_view_display()} on {self.date}"
 
+    class Meta:
+        ordering = ['-date']
+
 
 
 # finches = [
