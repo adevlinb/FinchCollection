@@ -3,17 +3,43 @@
 
     <h1>Finch Details</h1>
 
-    <div class="card">
-        <div class="card-content">
-            <span class="card-title">{{ finch.name }}</span>
-            <p>Breed: {{ finch.type }}</p>
-            <p>Description: {{ finch.description }}</p>
-            <p>Age: {{ finch.age }}</p>
-            <div class="card-action">
-                <a href="{% url 'finches_update' finch.id %}">Edit</a>
-                <a href="{% url 'finches_delete' finch.id %}">Delete</a>
+    <div class="row">
+        <div class="col s6">
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title">{{ finch.name }}</span>
+                    <p>Breed: {{ finch.type }}</p>
+                    <p>Description: {{ finch.description }}</p>
+                    <p>Age: {{ finch.age }}</p>
+                    <div class="card-action">
+                        <a href="{% url 'finches_update' finch.id %}">Edit</a>
+                        <a href="{% url 'finches_delete' finch.id %}">Delete</a>
+                    </div>
+                </div>
             </div>
         </div>
+        <div class="col s6">
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ watching_form.as_p }}
+                    <input type="submit" class="btn" value="Add Viewing">
+                </form>
+            <table class="striped">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Viewing</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for watching in finch.watching_set.all %}
+                    <tr>
+                        <td>{{watching.date}}</td>
+                        <td>{{watching.get_view_display}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
-
 {% endblock %}
