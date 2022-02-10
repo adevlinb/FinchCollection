@@ -5,5 +5,3 @@ class WatchingForm(ModelForm):
   class Meta:
     model = Watching
     fields = ['date', 'view']
-
-    

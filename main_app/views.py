@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from .models import Finch
+from .models import Finch, House
 from .forms import WatchingForm
 # from django.http import HttpResponse
 
@@ -18,8 +18,13 @@ def finches_index(request):
 
 def finches_detail(request, finch_id):
   finch = Finch.objects.get(id=finch_id)
+  id_list = finch.houses.all().values_list('id')
+  houses_finch_doesnt_have = House.objects.exclude(id__in=id_list)
   watching_form = WatchingForm()
-  return render(request, 'finches/detail.html', {'finch': finch, 'watching_form': watching_form})
+  return render(request, 'finches/detail.html', {'finch': finch,
+  'watching_form': watching_form, 
+  'houses': houses_finch_doesnt_have,
+  })
 
 def add_watching(request, finch_id):
   form = WatchingForm(request.POST)
@@ -43,4 +48,34 @@ class FinchUpdate(UpdateView):
 class FinchDelete(DeleteView):
   model = Finch
   success_url = '/finches/'
+
+def houses_index(request):
+  houses = House.objects.all()
+  return render(request, 'houses/index.html', {'houses': houses})
+
+def house_detail(request, house_id):
+  house = House.objects.get(id=house_id)
+  return render(request, 'houses/detail.html', {'house': house})
+
+class HouseCreate(CreateView):
+  model = House
+  fields = "__all__"
+
+class HouseUpdate(UpdateView):
+  model = House
+  fields = ['name', 'color']
+
+class HouseDelete(DeleteView):
+  model = House
+  success_url = '/houses/'
+
+def assoc_house(request, finch_id, house_id):
+  finch = Finch.objects.get(id=finch_id)
+  finch.houses.add(house_id)
+  return redirect ('detail', finch_id=finch_id)
+
+def un_assoc_house(request, finch_id, house_id):
+  finch = Finch.objects.get(id=finch_id)
+  finch.houses.remove(house_id)
+  return redirect ('detail', finch_id=finch_id)
 

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Bird House List</h1>
+
+{% for house in houses %}
+<div class="card">
+    <a href="{% url 'house_detail' house.id %}">
+        <div class="card-content">
+            <span class="card-title">{{ house.name }}</span>
+            <p>Type: {{ house.color }}</p>
+        </div>
+    </a>
+</div>
+{% endfor %}
+
+{% endblock %}
