@@ -1,6 +1,9 @@
+import os
+import boto3
+import uuid
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from .models import Finch, House
+from .models import Finch, House, Photo
 from .forms import WatchingForm
 # from django.http import HttpResponse
 
@@ -79,3 +82,21 @@ def un_assoc_house(request, finch_id, house_id):
   finch.houses.remove(house_id)
   return redirect ('detail', finch_id=finch_id)
 
+def add_photo(request, finch_id):
+  # photo file will be the "name" attribute of the input
+  photo_file = request.FILES.get('photo-file', None)
+  if photo_file:
+    s3 = boto3.client('s3')
+    # need a unique "key" name for s3
+    # and need the same file extension as well
+    key = uuid.uuid4().hex[:8] + photo_file.name[photo_file.name.rfind('.'):]
+    try:
+      bucket = os.environ['S3_BUCKET']
+      s3.upload_fileobj(photo_file, bucket, key)
+      url = f"{os.environ['S3_BASE_URL']}{bucket}/{key}"
+      Photo.objects.create(url=url, finch_id=finch_id)
+    except Exception as e:
+      print('An error occured uploading file to S3')
+      print(e)
+
+  return redirect('detail', finch_id=finch_id)

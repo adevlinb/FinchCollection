@@ -11,10 +11,13 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 import os
 from pathlib import Path
-from dotenv import load_dotenv
-load_dotenv()
+import environ
+environ.Env()
+environ.Env.read_env()
+# from dotenv import load_dotenv
+# load_dotenv()
 
-DJANGO_SECRET_KEY = str(os.getenv('DJANGO_SECRET_KEY'))
+DJANGO_SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
